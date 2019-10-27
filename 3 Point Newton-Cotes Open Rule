@@ -1,0 +1,50 @@
+Hey guys I'm new to python
+
+Kindly help me figure out why the Convergence rate is all zero. I've been battling with for some hours now.
+I'm trying to answer this question: Do a simple mesh refinement study to find the rate of convergence for the three 
+point Newton-Cotes Open Rule. My text function is sin(x)/x.
+
+
+def f(x):
+    return np.sin(x)/x
+ 
+def Two_Pt_Gauss(f=f,a=-1,b=1,n=400):
+    w1 = 1.0
+    w2 = 1.0
+    x1 = .57735227
+    x2 = -.57735227
+    Area = w1*f(x1) + w2*f(x2)
+    return Area
+
+#Convergence rate for Two Point Gauss
+def Error(trueValue,Aziegbemi):
+    return abs(trueValue-Aziegbemi)
+
+def ConvergenceRate(ErrorVec):
+    rateVec = []
+    for i in range(len(ErrorVec)-1):
+        rateVec.append(np.log(ErrorVec[i]/ErrorVec[i+1])/np.log(2.0))
+    return rateVec
+
+eps = 1e-16 #fudge factor to deal with the singularity in f(x) when x = 0
+trueValue = 0.946083070367
+#truevalue = 11.58666667
+AreaVec = []
+ErrorVec = []
+for i in range(7):
+    n = 2**(i+1)
+    AreaVec.append(Two_Pt_Gauss(f,0+eps,1.0,n))
+    ErrorVec.append(Error(trueValue,AreaVec[i]))
+
+RateVec = ConvergenceRate(ErrorVec)
+
+print("Area = ", '%.9f' % AreaVec[1])
+print("Area Vector: ",AreaVec)
+print("Erro Vector: ", ErrorVec)
+print("Convergence Rate: ", RateVec)
+
+OUTPUT:
+Area =  1.890725367
+Area Vector:  [1.890725366594047, 1.890725366594047, 1.890725366594047, 1.890725366594047, 1.890725366594047, 1.890725366594047, 1.890725366594047]
+Erro Vector:  [0.9446422962270471, 0.9446422962270471, 0.9446422962270471, 0.9446422962270471, 0.9446422962270471, 0.9446422962270471, 0.9446422962270471]
+Convergence Rate:  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
